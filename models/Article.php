@@ -11,6 +11,8 @@
     private string $content = "";
     private ?DateTime $dateCreation = null;
     private ?DateTime $dateUpdate = null;  
+    private int $numberOfViews = 0;
+    private int $numberOfReviews = 0;
 
     /**
      * Setter pour l'id de l'utilisateur. 
@@ -56,6 +58,26 @@
     {
         $this->content = $content;
     }
+
+    // ____________________________________________________________________________________
+
+    /**
+     * Setter vues
+     */
+    public function setNumberOfViews(int $views): void {
+        $this->numberOfViews = $views;
+    }
+    
+  
+    
+    /**
+     * Setter commentaires
+     */
+    public function setNumberOfReviews(int $reviews): void {
+        $this->numberOfReviews = $reviews;
+    }
+    // ____________________________________________________________________________________
+
 
     
     /**
@@ -127,4 +149,21 @@
     {
         return $this->dateUpdate;
     }
+
+    // ____________________________________________________________________________________
+
+      /**
+     * Getter vues
+     */
+    public function getNumberOfViews(): int {
+        return $this->numberOfViews;
+    }
+        /**
+     * Getter commentaires
+     */
+    public function getNumberOfReviews(): int {
+        return $this->numberOfReviews;
+    }
+    // ____________________________________________________________________________________
+
  }

@@ -6,6 +6,8 @@
 ?>
 
 <h2>Edition des articles</h2>
+<a class="submit" href="index.php?action=adminStats">Voir les statistiques</a>
+
 
 <div class="adminArticle">
     <?php foreach ($articles as $article) { ?>

@@ -4,7 +4,7 @@
  */
  
 class AdminController {
-
+    
     /**
      * Affiche la page d'administration.
      * @return void
@@ -24,6 +24,43 @@ class AdminController {
             'articles' => $articles
         ]);
     }
+// ____________________________________________________________________________________
+
+  public function showAdminStats() : void {
+    $this->checkIfUserIsConnected();
+
+    $articleManager = new ArticleManager();
+    $articles = $articleManager->getAllArticles();
+
+ 
+    foreach ($articles as $article) {
+        $article->setNumberOfViews($articleManager->getNumberOfViews($article->getId()));
+        $article->setNumberOfReviews($articleManager->getNumberOfReviews($article->getId()));
+    }
+
+    $selectedArticle = null;
+    $comments = [];
+
+    $articleId = Utils::request('article_id', null);
+    if ($articleId) {
+        $selectedArticle = $articleManager->getArticleById($articleId);
+        $commentManager = new CommentManager();
+        $comments = $commentManager->getAllCommentsByArticleId($articleId); 
+    }
+
+    $view = new View("Statistiques des articles");
+    $view->render("adminStats", [
+        'articles' => $articles,
+        'selectedArticle' => $selectedArticle,
+        'comments' => $comments  
+    ]);
+}
+
+// ____________________________________________________________________________________
+
+    
+
+
 
     /**
      * Vérifie que l'utilisateur est connecté.

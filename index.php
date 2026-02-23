@@ -48,6 +48,13 @@ try {
             $adminController = new AdminController();
             $adminController->displayConnectionForm();
             break;
+        // ____________________________________________________________________________________
+
+        case 'adminStats':
+            $adminController = new AdminController();
+            $adminController->showAdminStats();
+            break;
+        // ____________________________________________________________________________________
 
         case 'connectUser': 
             $adminController = new AdminController();
@@ -73,6 +80,13 @@ try {
             $adminController = new AdminController();
             $adminController->deleteArticle();
             break;
+        // ____________________________________________________________________________________
+
+        case 'deleteReview':
+            $adminController = new AdminController();
+            $adminController->deleteReviw();
+            break;
+        // ____________________________________________________________________________________
 
         default:
             throw new Exception("La page demandée n'existe pas.");
