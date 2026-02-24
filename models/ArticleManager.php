@@ -94,15 +94,20 @@ class ArticleManager extends AbstractEntityManager
     }
 
     // ____________________________________________________________________________________
+    public function incrementViews(int $articleId): void
+{
+    $sql = "UPDATE article SET views = views + 1 WHERE id = :id";
+    $this->db->query($sql, ['id' => $articleId]);
+}
 
 
     public function getNumberOfViews(int $articleId): int {
-        $sql = "SELECT COUNT(*) as views FROM article_view WHERE article_id = :id"; 
+            $sql = "SELECT views FROM article WHERE id = :id";
         $result = $this->db->query($sql, ['id' => $articleId]);
         return $result->fetchColumn();
 }
 
-    public function getNumberOfReviews(int $articleId): int {
+    public function getNumberOfComments(int $articleId): int {
         $sql = "SELECT COUNT(*) FROM comment WHERE id_article = :id";
         $result = $this->db->query($sql, ['id' => $articleId]);
         return $result->fetchColumn();

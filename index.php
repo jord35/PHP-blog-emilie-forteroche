@@ -82,9 +82,9 @@ try {
             break;
         // ____________________________________________________________________________________
 
-        case 'deleteReview':
-            $adminController = new AdminController();
-            $adminController->deleteReviw();
+       case 'deleteComment':
+            $commentController = new AdminController();
+            $commentController->deleteComment();
             break;
         // ____________________________________________________________________________________
 

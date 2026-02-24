@@ -6,45 +6,63 @@
 ?>
 
 <h2>Statistiques des articles</h2>
+
 <a class="submit" href="index.php?action=admin">← Gérer articles</a>
 
 <div class="adminArticle">
-    <?php foreach ($articles as $article): ?>
+    <?php foreach ($articles as $article) { ?>
         <div class="articleLine">
             <div class="title"><?= htmlspecialchars($article->getTitle()) ?></div>
-            <div class="content"><?= $article->getNumberOfViews() ?></div>
-            <div class="content"><?= $article->getDateCreation() ?></div>
-            <div class="content"><?= $article->getNumberOfReviews() ?></div>
+
+            <div class="content">
+                Vues : <?= (int) $article->getNumberOfViews() ?>
+            </div>
+
+            <div class="content">
+                Publié : <?= $article->getDateCreation()->format('d/m/Y H:i') ?>
+            </div>
+
+            <div class="content">
+                Commentaires : <?= (int) $article->getNumberOfComments() ?>
+            </div>
+
             <div>
-                <a class="submit" href="index.php?action=adminStats&article_id=<?= $article->getId() ?>">Voir commentaires</a>
+                <a class="submit" href="index.php?action=adminStats&article_id=<?= $article->getId() ?>">
+                    Voir commentaires
+                </a>
             </div>
         </div>
-    <?php endforeach; ?>
+    <?php } ?>
 </div>
 
-<?php if ($selectedArticle): ?>
+<?php if ($selectedArticle) { ?>
     <h3>Commentaires pour : <?= htmlspecialchars($selectedArticle->getTitle()) ?></h3>
-    
+
     <div class="adminArticle">
-        <?php foreach ($comments as $comment): ?>
+        <?php foreach ($comments as $comment) { ?>
             <div class="articleLine">
                 <div class="title"><?= htmlspecialchars($comment->getPseudo()) ?></div>
+
                 <div class="content"><?= htmlspecialchars($comment->getContent()) ?></div>
-                <div class="date"><?= $comment->getDateCreation() ?></div>
+
+                <div class="content">
+                    <?= $comment->getDateCreation()->format('d/m/Y H:i') ?>
+                </div>
+
                 <div>
-                    <a class="submit" href="index.php?action=deleteComment&id=<?= $comment->getId() ?>"
+                    <a class="submit"
+                       href="index.php?action=deleteComment&id=<?= $comment->getId() ?>&article_id=<?= $selectedArticle->getId() ?>"
                        <?= Utils::askConfirmation("Supprimer ce commentaire ?") ?>>
                         Supprimer
                     </a>
                 </div>
             </div>
-        <?php endforeach; ?>
-        
-        <?php if (empty($comments)): ?>
-            <p>Aucun commentaire pour cet article.</p>
-        <?php endif; ?>
-    </div>
-    
-    <a class="submit" href="index.php?action=adminStats">← Retour stats</a>
-<?php endif; ?>
+        <?php } ?>
 
+        <?php if (empty($comments)) { ?>
+            <p>Aucun commentaire pour cet article.</p>
+        <?php } ?>
+    </div>
+
+    <a class="submit" href="index.php?action=adminStats">← Retour stats</a>
+<?php } ?>

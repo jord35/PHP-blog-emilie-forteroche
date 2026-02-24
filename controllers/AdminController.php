@@ -35,7 +35,7 @@ class AdminController {
  
     foreach ($articles as $article) {
         $article->setNumberOfViews($articleManager->getNumberOfViews($article->getId()));
-        $article->setNumberOfReviews($articleManager->getNumberOfReviews($article->getId()));
+        $article->setNumberOfComments($articleManager->getNumberOfComments($article->getId()));
     }
 
     $selectedArticle = null;
@@ -213,4 +213,22 @@ class AdminController {
         // On redirige vers la page d'administration.
         Utils::redirect("admin");
     }
+    // _____________________________________________________________________________
+    public function deleteComment(): void 
+    {
+        $this->checkIfUserIsConnected();
+         $id = (int) Utils::request('id', -1);
+        $articleId = (int) Utils::request('article_id', -1);
+
+        $commentManager = new CommentManager();
+        $commentManager->deleteComment($id);
+
+        // Retour sur la page stats, idéalement sur le même article
+        if ($articleId > 0) {
+            Utils::redirect('adminStats', ['article_id' => $articleId]);
+        }
+        Utils::redirect('adminStats');
+
+    }
 }
+// _____________________________________________________________________________

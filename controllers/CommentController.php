@@ -40,7 +40,7 @@ class CommentController
         if (!$result) {
             throw new Exception("Une erreur est survenue lors de l'ajout du commentaire.");
         }
-
+        $_SESSION['skip_view_increment_for_article'] = (int) $idArticle;
         // On redirige vers la page de l'article.
         Utils::redirect("showArticle", ['id' => $idArticle]);
     }

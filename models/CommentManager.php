@@ -44,26 +44,30 @@ class CommentManager extends AbstractEntityManager
      * @return bool : true si l'ajout a réussi, false sinon.
      */
     public function addComment(Comment $comment) : bool
-    {
-        $sql = "INSERT INTO comment (pseudo, content, id_article, date_creation) VALUES (:pseudo, :content, :idArticle, NOW())";
-        $result = $this->db->query($sql, [
-            'pseudo' => $comment->getPseudo(),
-            'content' => $comment->getContent(),
-            'idArticle' => $comment->getIdArticle()
-        ]);
-        return $result->rowCount() > 0;
-    }
+{
+    $sql = "INSERT INTO comment (pseudo, content, id_article, date_creation)
+            VALUES (:pseudo, :content, :idArticle, NOW())";
+
+    $result = $this->db->query($sql, [
+        'pseudo' => $comment->getPseudo(),
+        'content' => $comment->getContent(),
+        'idArticle' => $comment->getIdArticle()
+    ]);
+
+    return $result->rowCount() > 0;
+}
+
 
     /**
      * Supprime un commentaire.
      * @param Comment $comment : l'objet Comment à supprimer.
      * @return bool : true si la suppression a réussi, false sinon.
      */
-    public function deleteComment(Comment $comment) : bool
+    public function deleteComment(int $id) : bool
     {
         $sql = "DELETE FROM comment WHERE id = :id";
-        $result = $this->db->query($sql, ['id' => $comment->getId()]);
-        return $result->rowCount() > 0;
+        $result = $this->db->query($sql, ['id' => $id]);
+        return true;
     }
 
 }

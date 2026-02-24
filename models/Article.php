@@ -73,7 +73,7 @@
     /**
      * Setter commentaires
      */
-    public function setNumberOfReviews(int $reviews): void {
+    public function setNumberOfComments(int $reviews): void {
         $this->numberOfReviews = $reviews;
     }
     // ____________________________________________________________________________________
@@ -131,13 +131,18 @@
      * @param string $format : le format pour la convertion de la date si elle est une string.
      * Par défaut, c'est le format de date mysql qui est utilisé.
      */
-    public function setDateUpdate(string|DateTime $dateUpdate, string $format = 'Y-m-d H:i:s') : void 
-    {
-        if (is_string($dateUpdate)) {
-            $dateUpdate = DateTime::createFromFormat($format, $dateUpdate);
-        }
-        $this->dateUpdate = $dateUpdate;
+   public function setDateUpdate(string|DateTime|null $dateUpdate, string $format = 'Y-m-d H:i:s') : void
+{
+    if ($dateUpdate === null) {
+        $this->dateUpdate = null;
+        return;
     }
+
+    if (is_string($dateUpdate)) {
+        $dateUpdate = DateTime::createFromFormat($format, $dateUpdate);
+    }
+    $this->dateUpdate = $dateUpdate;
+}
 
     /**
      * Getter pour la date de mise à jour.
@@ -161,7 +166,7 @@
         /**
      * Getter commentaires
      */
-    public function getNumberOfReviews(): int {
+    public function getNumberOfComments(): int {
         return $this->numberOfReviews;
     }
     // ____________________________________________________________________________________
