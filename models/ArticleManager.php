@@ -20,6 +20,32 @@ class ArticleManager extends AbstractEntityManager
         }
         return $articles;
     }
+
+// ____________________________________________________________________________________
+public function getAllArticlesWithStats(): array
+{
+    $sql = "
+        SELECT
+            a.*,
+            a.views AS number_of_views,
+            COUNT(c.id) AS number_of_comments
+        FROM article a
+        LEFT JOIN comment c ON c.id_article = a.id
+        GROUP BY a.id
+    ";
+
+    $result = $this->db->query($sql);
+    $articles = [];
+
+    while ($row = $result->fetch()) {
+        $articles[] = new Article($row);
+    }
+
+    return $articles;
+}
+// ____________________________________________________________________________________
+
+
     
     /**
      * Récupère un article par son id.

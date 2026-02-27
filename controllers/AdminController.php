@@ -30,13 +30,8 @@ class AdminController {
     $this->checkIfUserIsConnected();
 
     $articleManager = new ArticleManager();
-    $articles = $articleManager->getAllArticles();
+    $articles = $articleManager->getAllArticlesWithStats();
 
- 
-    foreach ($articles as $article) {
-        $article->setNumberOfViews($articleManager->getNumberOfViews($article->getId()));
-        $article->setNumberOfComments($articleManager->getNumberOfComments($article->getId()));
-    }
 
     $selectedArticle = null;
     $comments = [];
