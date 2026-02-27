@@ -22,8 +22,20 @@ class ArticleManager extends AbstractEntityManager
     }
 
 // ____________________________________________________________________________________
-public function getAllArticlesWithStats(): array
+public function getAllArticlesWithStatsSorted(string $sort, string $dir): array
 {
+    $sortMap = [
+        'title' => 'a.title',
+        'date' => 'a.date_creation',
+        'views' => 'a.views',                
+        'comments' => 'number_of_comments',  
+    ];
+
+    $dir = strtolower($dir);
+    $dirSql = ($dir === 'asc') ? 'ASC' : 'DESC';
+
+    $sortSql = $sortMap[$sort] ?? $sortMap['date'];
+
     $sql = "
         SELECT
             a.*,
@@ -32,6 +44,7 @@ public function getAllArticlesWithStats(): array
         FROM article a
         LEFT JOIN comment c ON c.id_article = a.id
         GROUP BY a.id
+        ORDER BY $sortSql $dirSql
     ";
 
     $result = $this->db->query($sql);

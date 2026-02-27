@@ -30,8 +30,11 @@ class AdminController {
 {
     $this->checkIfUserIsConnected();
 
+    $sort = (string) Utils::request('sort', 'date');
+    $dir  = (string) Utils::request('dir', 'desc');
+
     $articleManager = new ArticleManager();
-    $articles = $articleManager->getAllArticlesWithStats();
+    $articles = $articleManager->getAllArticlesWithStatsSorted($sort, $dir);
 
     // Defaults (toujours définis)
     $selectedArticle = null;
@@ -63,6 +66,8 @@ class AdminController {
 
     $view = new View("Statistiques des articles");
     $view->render("adminStats", [
+        'sort' => $sort,
+        'dir' => $dir,
         'articles' => $articles,
         'selectedArticle' => $selectedArticle,
         'comments' => $comments,

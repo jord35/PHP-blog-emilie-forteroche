@@ -8,6 +8,32 @@
 <h2>Statistiques des articles</h2>
 
 <a class="submit" href="index.php?action=admin">← Gérer articles</a>
+<?php
+$sort = $sort ?? 'date';
+$dir = $dir ?? 'desc';
+?>
+
+<form method="get" action="index.php">
+    <input type="hidden" name="action" value="adminStats">
+
+    <?php if (!empty($selectedArticle)) { ?>
+        <input type="hidden" name="article_id" value="<?= (int) $selectedArticle->getId() ?>">
+    <?php } ?>
+
+    <label for="sort">Trier par</label>
+    <select name="sort" id="sort">
+        <option value="title" <?= $sort === 'title' ? 'selected' : '' ?>>Titre</option>
+        <option value="date" <?= $sort === 'date' ? 'selected' : '' ?>>Date</option>
+        <option value="views" <?= $sort === 'views' ? 'selected' : '' ?>>Vues</option>
+        <option value="comments" <?= $sort === 'comments' ? 'selected' : '' ?>>Commentaires</option>
+    </select>
+
+    <button class="submit" type="submit" name="dir" value="<?= $dir === 'asc' ? 'desc' : 'asc' ?>">
+        <?= $dir === 'asc' ? 'Ascendant' : 'Descendant' ?>
+    </button>
+
+    <button class="submit" type="submit">Appliquer</button>
+</form>
 
 <div class="adminArticle">
     <?php foreach ($articles as $article) { ?>
@@ -27,7 +53,8 @@
             </div>
 
             <div>
-                <a class="submit" href="index.php?action=adminStats&article_id=<?= $article->getId() ?>">
+                <a class="submit" href="index.php?action=adminStats&article_id=<?= (int) $article->getId() 
+                    ?>&sort=<?= urlencode($sort) ?>&dir=<?= urlencode($dir) ?>">
                     Voir commentaires
                 </a>
             </div>
@@ -51,7 +78,7 @@
 
                 <div>
                     <a class="submit"
-                       href="index.php?action=deleteComment&id=<?= $comment->getId() ?>&article_id=<?= $selectedArticle->getId() ?>"
+                       href="index.php?action=deleteComment&id=<?= $comment->getId() ?>&article_id=<?= (int) $selectedArticle->getId() ?>"
                        <?= Utils::askConfirmation("Supprimer ce commentaire ?") ?>>
                         Supprimer
                     </a>
@@ -67,19 +94,25 @@
         <div class="pagination">
             <?php if ($commentPage > 1) { ?>
                 <a class="submit"
-                   href="index.php?action=adminStats&article_id=<?= (int) $selectedArticle->getId() ?>&comment_page=<?= (int) ($commentPage - 1) ?>">
+                   href="index.php?action=adminStats&article_id=<?= 
+                   (int) $selectedArticle->getId() ?>&comment_page=<?= (int) ($commentPage - 1)  ?>&sort=<?= urlencode($sort) ?>&dir=<?= urlencode($dir) ?>">
                     ← Précédent
                 </a>
             <?php } ?>
 
             <?php if ($commentPage < $totalCommentPages) { ?>
                 <a class="submit"
-                   href="index.php?action=adminStats&article_id=<?= (int) $selectedArticle->getId() ?>&comment_page=<?= (int) ($commentPage + 1) ?>">
+                   href="index.php?action=adminStats&article_id=<?= 
+                   (int) $selectedArticle->getId() ?>&comment_page=<?= (int) ($commentPage +1)  ?>&sort=<?= urlencode($sort) ?>&dir=<?= urlencode($dir) ?>">
                     Suivant →
                 </a>
             <?php } ?>
         </div>
     <?php } ?>
 
-    <a class="submit" href="index.php?action=adminStats">← Retour stats</a>
+    <a class="submit"
+    href="index.php?action=adminStats&sort=<?= urlencode($sort) ?>&dir=<?= urlencode($dir) ?>">
+   ← Retour stats
+    </a>
+
 <?php } ?>
