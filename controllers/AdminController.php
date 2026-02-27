@@ -26,28 +26,48 @@ class AdminController {
     }
 // ____________________________________________________________________________________
 
-  public function showAdminStats() : void {
+ public function showAdminStats() : void
+{
     $this->checkIfUserIsConnected();
 
     $articleManager = new ArticleManager();
     $articles = $articleManager->getAllArticlesWithStats();
 
-
+    // Defaults (toujours définis)
     $selectedArticle = null;
     $comments = [];
 
-    $articleId = Utils::request('article_id', null);
-    if ($articleId) {
+    $perPage = 5;
+    $commentPage = (int) Utils::request('comment_page', 1);
+    $totalCommentPages = 0;
+
+    $articleId = (int) Utils::request('article_id', 0);
+
+    if ($articleId > 0) {
         $selectedArticle = $articleManager->getArticleById($articleId);
+
         $commentManager = new CommentManager();
-        $comments = $commentManager->getAllCommentsByArticleId($articleId); 
+
+        $totalComments = $commentManager->countByArticleId($articleId);
+        $totalCommentPages = (int) ceil($totalComments / $perPage);
+
+        // Clamp page
+        if ($totalCommentPages > 0) {
+            $commentPage = max(1, min($commentPage, $totalCommentPages));
+        } else {
+            $commentPage = 1;
+        }
+
+        $comments = $commentManager->getByArticleIdPaginated($articleId, $commentPage, $perPage);
     }
 
     $view = new View("Statistiques des articles");
     $view->render("adminStats", [
         'articles' => $articles,
         'selectedArticle' => $selectedArticle,
-        'comments' => $comments  
+        'comments' => $comments,
+        'commentPage' => $commentPage,
+        'totalCommentPages' => $totalCommentPages
     ]);
 }
 

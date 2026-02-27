@@ -63,6 +63,23 @@
             <p>Aucun commentaire pour cet article.</p>
         <?php } ?>
     </div>
+    <?php if ($totalCommentPages > 1) { ?>
+        <div class="pagination">
+            <?php if ($commentPage > 1) { ?>
+                <a class="submit"
+                   href="index.php?action=adminStats&article_id=<?= (int) $selectedArticle->getId() ?>&comment_page=<?= (int) ($commentPage - 1) ?>">
+                    ← Précédent
+                </a>
+            <?php } ?>
+
+            <?php if ($commentPage < $totalCommentPages) { ?>
+                <a class="submit"
+                   href="index.php?action=adminStats&article_id=<?= (int) $selectedArticle->getId() ?>&comment_page=<?= (int) ($commentPage + 1) ?>">
+                    Suivant →
+                </a>
+            <?php } ?>
+        </div>
+    <?php } ?>
 
     <a class="submit" href="index.php?action=adminStats">← Retour stats</a>
 <?php } ?>

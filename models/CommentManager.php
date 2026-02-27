@@ -21,7 +21,40 @@ class CommentManager extends AbstractEntityManager
         }
         return $comments;
     }
+// __________________________________________________________________________
 
+    public function countByArticleId(int $articleId): int
+{
+    $sql = "SELECT COUNT(*) FROM comment WHERE id_article = :id_article";
+    $stmt = $this->db->query($sql, ['id_article' => $articleId]);
+    return (int) $stmt->fetchColumn();
+}
+
+public function getByArticleIdPaginated(int $articleId, int $page, int $perPage = 5): array
+{
+    $page = max(1, $page);
+    $perPage = max(1, $perPage);
+    $offset = ($page - 1) * $perPage;
+
+    
+    $sql = "
+        SELECT *
+        FROM comment
+        WHERE id_article = :id_article
+        ORDER BY date_creation DESC
+        LIMIT $perPage OFFSET $offset
+    ";
+
+    $stmt = $this->db->query($sql, ['id_article' => $articleId]);
+
+    $comments = [];
+    while ($row = $stmt->fetch()) {
+        $comments[] = new Comment($row); 
+    }
+    return $comments;
+}
+
+// __________________________________________________________________________
     /**
      * Récupère un commentaire par son id.
      * @param int $id : l'id du commentaire.
