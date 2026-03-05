@@ -25,27 +25,28 @@ class AdminController {
         ]);
     }
 // ____________________________________________________________________________________
-
+// Affiche la page de statistiques des articles.
  public function showAdminStats() : void
 {
     $this->checkIfUserIsConnected();
-
+// Récupération des paramètres de depart pour le tri et la pagination
     $sort = (string) Utils::request('sort', 'date');
     $dir  = (string) Utils::request('dir', 'desc');
 
     $articleManager = new ArticleManager();
+    // Récupération de tous les articles avec leurs statistiques, triés selon les paramètres
     $articles = $articleManager->getAllArticlesWithStatsSorted($sort, $dir);
 
     // Defaults (toujours définis)
     $selectedArticle = null;
     $comments = [];
-
+// Pagination des commentaires
     $perPage = 5;
     $commentPage = (int) Utils::request('comment_page', 1);
     $totalCommentPages = 0;
-
+// Récupération de l'article sélectionné (s'il y en a un)
     $articleId = (int) Utils::request('article_id', 0);
-
+// Si un article est sélectionné, on récupère ses commentaires paginés
     if ($articleId > 0) {
         $selectedArticle = $articleManager->getArticleById($articleId);
 
@@ -54,16 +55,16 @@ class AdminController {
         $totalComments = $commentManager->countByArticleId($articleId);
         $totalCommentPages = (int) ceil($totalComments / $perPage);
 
-        // Clamp page
+        
         if ($totalCommentPages > 0) {
             $commentPage = max(1, min($commentPage, $totalCommentPages));
         } else {
             $commentPage = 1;
         }
-
+        
         $comments = $commentManager->getByArticleIdPaginated($articleId, $commentPage, $perPage);
     }
-
+// Affichage de la page de statistiques
     $view = new View("Statistiques des articles");
     $view->render("adminStats", [
         'sort' => $sort,
